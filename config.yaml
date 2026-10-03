@@ -1,0 +1,60 @@
+# ──────────────────────────────────────────────
+# what-drives-xg  /  config.yaml
+# Central configuration for the entire project.
+# Edit this file to change competitions, seeds,
+# or paths. Do NOT hardcode these values in scripts.
+# ──────────────────────────────────────────────
+
+# Random seeds (used everywhere for reproducibility)
+seed: 42
+
+# Paths (relative to repo root)
+paths:
+  data_dir: data/
+  results_dir: results/
+  processed_shots: results/shots_processed.parquet  # gitignored
+  oof_dir: results/oof/         # out-of-fold predictions
+
+# ──────────────────────────────────────
+# Competition selection
+# Filled in after checkpoint 1 data audit.
+# ──────────────────────────────────────
+competitions:
+  # Core set: used for training and CV
+  core: []            # PLACEHOLDER — to be filled after checkpoint 1
+
+  # Held-out set: used only for transfer test (checkpoint 8)
+  held_out: []        # PLACEHOLDER — to be filled after checkpoint 1
+
+# ──────────────────────────────────────
+# Modelling
+# ──────────────────────────────────────
+model:
+  cv_folds: 5         # number of match-grouped CV folds
+  n_bootstrap: 1000   # bootstrap iterations for CI on metrics
+  # Orderings to average over for group-credit assignment
+  orderings: 6        # number of random feature-group orderings
+
+# ──────────────────────────────────────
+# Exclusions (applied before any modelling)
+# ──────────────────────────────────────
+exclusions:
+  # Shot types to drop from main model (kept in a separate filtered set)
+  shot_types_excluded:
+    - Penalty
+  # Penalty shootout shots are identified by period == 5 in StatsBomb data
+  exclude_shootout_period: true   # period == 5
+
+# ──────────────────────────────────────
+# Leakage policy (documentation only — enforcement is in src/leakage.py)
+# ──────────────────────────────────────
+leakage:
+  forbidden_columns:
+    - shot_outcome
+    - shot_end_location
+    - shot_saved_to_post
+    - shot_saved_off_target
+    - statsbomb_xg          # target benchmark, never a feature
+    # Any column whose name starts with these prefixes is also forbidden:
+    forbidden_prefixes:
+      - shot_freeze_frame   # raw freeze-frame blob
