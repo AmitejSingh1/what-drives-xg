@@ -42,8 +42,10 @@ exclusions:
   # Shot types to drop from main model (kept in a separate filtered set)
   shot_types_excluded:
     - Penalty
-  # Penalty shootout shots are identified by period == 5 in StatsBomb data
-  exclude_shootout_period: true   # period == 5
+  # Shootout shots must also be excluded.
+  # The field and value used to identify them will be confirmed during
+  # the Checkpoint 1 data audit and filled in here before Checkpoint 2.
+  exclude_shootout: true   # mechanism TBD — pending data audit
 
 # ──────────────────────────────────────
 # Leakage policy (documentation only — enforcement is in src/leakage.py)
@@ -55,6 +57,5 @@ leakage:
     - shot_saved_to_post
     - shot_saved_off_target
     - statsbomb_xg          # target benchmark, never a feature
-    # Any column whose name starts with these prefixes is also forbidden:
-    forbidden_prefixes:
-      - shot_freeze_frame   # raw freeze-frame blob
+    # Prefix-based rules (e.g. for the raw freeze-frame blob) will be
+    # added here after the Checkpoint 1 data audit confirms the field names.

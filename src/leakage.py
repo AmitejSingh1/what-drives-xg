@@ -6,8 +6,10 @@ FORBIDDEN columns (must never appear as model features):
   - shot_outcome      : what happened after the shot
   - shot_end_location : where the ball ended up
   - statsbomb_xg      : the benchmark target — never a feature
-  - Any column whose name starts with 'shot_freeze_frame'
-    (raw nested blob; derived features are allowed)
+
+Prefix-based rules (FORBIDDEN_PATTERNS) will be added at Checkpoint 2
+once the real StatsBomb field names for the raw freeze-frame object
+have been confirmed during the Checkpoint 1 data audit.
 
 The check_no_leakage() function raises ValueError if any forbidden
 column is present in a DataFrame or list of column names.
@@ -29,15 +31,14 @@ FORBIDDEN_EXACT: frozenset[str] = frozenset(
         "shot_end_location",
         "shot_saved_to_post",
         "shot_saved_off_target",
-        "shot_one_on_one",   # only forbidden if used as a post-shot flag
         "statsbomb_xg",
     ]
 )
 
-# Forbidden column name prefixes (regex patterns)
-FORBIDDEN_PATTERNS: list[str] = [
-    r"^shot_freeze_frame",   # raw freeze-frame blob columns
-]
+# Forbidden column name prefixes (regex patterns).
+# To be populated at Checkpoint 2 after the data audit confirms the
+# exact name of the raw freeze-frame blob column.
+FORBIDDEN_PATTERNS: list[str] = []
 
 
 def _is_forbidden(col: str) -> bool:

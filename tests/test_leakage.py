@@ -31,12 +31,6 @@ class TestCheckNoLeakage:
         with pytest.raises(ValueError, match="shot_end_location"):
             check_no_leakage(df)
 
-    def test_freeze_frame_prefix_raises(self):
-        """Any column starting with shot_freeze_frame is forbidden."""
-        df = pd.DataFrame(columns=["distance", "shot_freeze_frame_defenders"])
-        with pytest.raises(ValueError, match="shot_freeze_frame"):
-            check_no_leakage(df)
-
     def test_list_of_strings_works(self):
         """check_no_leakage also accepts a plain list of column names."""
         with pytest.raises(ValueError):
@@ -61,9 +55,3 @@ class TestDropForbidden:
         df = pd.DataFrame(columns=["distance", "angle"])
         result = drop_forbidden(df)
         assert list(result.columns) == ["distance", "angle"]
-
-    def test_freeze_frame_prefix_dropped(self):
-        df = pd.DataFrame(columns=["distance", "shot_freeze_frame_defenders_in_cone"])
-        result = drop_forbidden(df)
-        assert "shot_freeze_frame_defenders_in_cone" not in result.columns
-        assert "distance" in result.columns
